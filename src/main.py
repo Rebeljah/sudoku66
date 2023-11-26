@@ -18,7 +18,7 @@ class GameState:
 
     def draw(self):
         """Draw the UI onto the pygame screen"""
-        self.screen.flip()
+        pg.display.flip()  # re-render screen
 
 
 def new_screen() -> pg.Surface:
@@ -42,7 +42,7 @@ def main():
     while True:
         game.check_events()
         game.update()
-        game.draw_screen(screen)
+        game.draw()
 
 
 if __name__ == '__main__':
