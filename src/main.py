@@ -3,10 +3,12 @@ from button import Button
 import config
 import pubsub
 
+
 class GameState:
     """
     Class to manage and update game objects and draw to screen.
     """
+
     def __init__(self, screen: pg.Surface):
         """
         Initializes the game state.
@@ -19,7 +21,8 @@ class GameState:
         # Temporary button for testing
         self.test_button = Button(150, 75, 'click me', lambda: print('click!'))
 
-    def check_events(self):
+    @staticmethod
+    def check_events():
         """
         Checks Pygame events and updates game state/objects accordingly.
         """
@@ -47,6 +50,7 @@ class GameState:
         self.test_button.draw(self.screen)
         pg.display.flip()  # Re-renders the screen
 
+
 def new_screen() -> pg.Surface:
     """
     Creates a new Pygame screen based on the user's monitor size.
@@ -61,6 +65,7 @@ def new_screen() -> pg.Surface:
     pg.display.set_caption('Sudoku 66')
 
     return screen
+
 
 def main():
     """
@@ -78,6 +83,7 @@ def main():
         game.check_events()
         game.update()
         game.draw()
+
 
 if __name__ == '__main__':
     main()

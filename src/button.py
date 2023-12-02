@@ -23,7 +23,7 @@ class Button:
         self.rect = self.image.get_rect()
 
         pubsub.subscribe(pg.MOUSEBUTTONUP, self.on_click)
-        
+
     def on_click(self, mouse_pos):
         """Can be called on mouse up or mouse down to react to user clicking on
         screen"""
@@ -31,7 +31,7 @@ class Button:
             self.on_click_function()
 
     def draw(self, other_surface: pg.Surface):
-        #ceate border effect
+        # ceate border effect
         self.image.fill(config.Color.BLACK)  # border color
         background_rect = self.rect.inflate(-6, -6)  # shrinked version of rect
         background_rect.center = self.rect.center
