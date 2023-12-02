@@ -27,6 +27,19 @@ class SudokuGenerator:
         self.row_length = row_length
         self.removed_cells = removed_cells
         self.board = [[0 for i in range(row_length)] for j in range(row_length)]
+
+        # Example sudoku for testing purposes
+        # self.board = [
+        #     [4, 8, 7, 3, 1, 2, 5, 9, 6],
+        #     [5, 6, 3, 4, 9, 7, 1, 2, 8],
+        #     [1, 2, 9, 5, 6, 8, 3, 4, 7],
+        #     [2, 4, 5, 8, 3, 6, 9, 7, 1],
+        #     [6, 3, 8, 1, 7, 9, 2, 5, 4],
+        #     [7, 9, 1, 2, 4, 5, 8, 6, 3],
+        #     [9, 5, 4, 7, 8, 1, 6, 3, 2],
+        #     [3, 1, 2, 6, 5, 4, 7, 8, 9],
+        #     [8, 7, 6, 9, 2, 3, 4, 1, 5]]
+
         self.box_length = math.sqrt(row_length)
 
     def get_board(self):
@@ -60,9 +73,9 @@ class SudokuGenerator:
         Return: boolean
         """
         if num in self.board[row]:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def valid_in_col(self, col, num):
         """
@@ -77,9 +90,9 @@ class SudokuGenerator:
         """
         for row in self.board:
             if num == row[col]:
-                return True
-
-        return False
+                return False
+        else:
+            return True
 
     def valid_in_box(self, row_start, col_start, num):
         """
@@ -94,7 +107,24 @@ class SudokuGenerator:
 
         Return: boolean
         """
-        pass
+        # Method 1: Finds the top left corner of the default box for the given index
+        row_i = row_start  # Tracks new row index
+        col_j = col_start  # Tracks new col index
+
+        # If the indexes aren't divisible by 3, subtract one until it is.
+        # This way, it will find the closest default box
+        while row_i % 3 != 0:
+            row_i -= 1
+        while col_j % 3 != 0:
+            col_j -= 1
+
+        # Finally, check the box to see if the number is a valid addition.
+        for i in range(row_i, row_i + 3):
+            for j in range(col_j, col_j + 3):
+                if num == self.board[i][j]:
+                    return False
+        else:
+            return True
 
     def is_valid(self, row, col, num):
         """
@@ -107,7 +137,12 @@ class SudokuGenerator:
 
         Return: boolean
         """
-        pass
+
+        # Must pass all checks to be valid: Row, Col, and Box
+        if self.valid_in_row(row, num) and self.valid_in_col(col, num) and self.valid_in_box(row, col, num):
+            return True
+        else:
+            return False
 
     def fill_box(self, row_start, col_start):
         """
@@ -120,7 +155,24 @@ class SudokuGenerator:
 
         Return: None
         """
-        pass
+        row_i = row_start  # Tracks new row index
+        col_j = col_start  # Tracks new col index
+
+        # If the indexes aren't divisible by 3, subtract one until it is.
+        # This way, it will find the closest default box
+        while row_i % 3 != 0:
+            row_i -= 1
+        while col_j % 3 != 0:
+            col_j -= 1
+
+        # Iterate through the box, generating a random number each time and checking if it can be placed in the box.
+        for i in range(row_i, row_i + 3):
+            for j in range(col_j, col_j + 3):
+                while True:
+                    num = random.randint(1, 9)
+                    if self.valid_in_box(row_i, col_j, num):
+                        self.board[i][j] = num
+                        break
 
     def fill_diagonal(self):
         """
@@ -130,6 +182,9 @@ class SudokuGenerator:
         Parameters: None
         Return: None
         """
+        self.fill_box(0, 0)
+        self.fill_box(3, 3)
+        self.fill_box(6, 6)
 
     '''
     DO NOT CHANGE
@@ -152,10 +207,10 @@ class SudokuGenerator:
             return True
         if row < self.box_length:
             if col < self.box_length:
-                col = self.box_length
+                col = int(self.box_length)
         elif row < self.row_length - self.box_length:
             if col == int(row // self.box_length * self.box_length):
-                col += self.box_length
+                col += int(self.box_length)
         else:
             if col == self.row_length - self.box_length:
                 row += 1
@@ -231,11 +286,18 @@ def generate_sudoku(size, removed):
 Testing Below
 """
 
-
 if __name__ == "__main__":
     obj = SudokuGenerator(9, 0)
     obj.print_board()
-    print(obj.valid_in_row(0, 0))
-    # print(obj.valid_in_col(0, 1))
-    # test
+    # print("1 allowed in row 0?: ", obj.valid_in_row(0, 1))
+    # print("5 allowed in row 0?: ", obj.valid_in_row(0, 5))
+    # print("1 allowed in col 0?: ", obj.valid_in_col(0, 1))
+    # print("2 allowed in col 0?: ", obj.valid_in_col(0, 2))
+    # print("is 1 allowed in the box?", obj.valid_in_box(0, 4, 2))
+    # print("is 1 a valid number: ", obj.is_valid(0, 4, 1))
+
+    obj.fill_diagonal()
+    obj.fill_remaining(0, 3)
+    obj.print_board()
+
     print("Everything passed")
