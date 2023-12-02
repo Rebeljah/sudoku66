@@ -237,4 +237,5 @@ if __name__ == "__main__":
     obj.print_board()
     print(obj.valid_in_row(0, 0))
     # print(obj.valid_in_col(0, 1))
+    # test
     print("Everything passed")
