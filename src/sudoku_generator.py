@@ -186,20 +186,19 @@ class SudokuGenerator:
         self.fill_box(3, 3)
         self.fill_box(6, 6)
 
-    '''
-    DO NOT CHANGE
-    Provided for students
-    Fills the remaining cells of the board
-    Should be called after the diagonal boxes have been filled
-    
-    Parameters:
-    row, col specify the coordinates of the first empty (0) cell
-    
-    Return:
-    boolean (whether or not we could solve the board)
-    '''
-
     def fill_remaining(self, row, col):
+        """
+        DO NOT CHANGE
+        Provided for students
+        Fills the remaining cells of the board
+        Should be called after the diagonal boxes have been filled
+
+        Parameters:
+        row, col specify the coordinates of the first empty (0) cell
+
+        Return:
+        boolean (whether or not we could solve the board)
+        """
         if (col >= self.row_length and row < self.row_length - 1):
             row += 1
             col = 0
@@ -226,54 +225,56 @@ class SudokuGenerator:
                 self.board[row][col] = 0
         return False
 
-    '''
-    DO NOT CHANGE
-    Provided for students
-    Constructs a solution by calling fill_diagonal and fill_remaining
-    
-    Parameters: None
-    Return: None
-    '''
-
     def fill_values(self):
+        """
+        DO NOT CHANGE
+        Provided for students
+        Constructs a solution by calling fill_diagonal and fill_remaining
+
+        Parameters: None
+        Return: None
+        """
         self.fill_diagonal()
         self.fill_remaining(0, self.box_length)
 
-    '''
-    Removes the appropriate number of cells from the board
-    This is done by setting some values to 0
-    Should be called after the entire solution has been constructed
-    i.e. after fill_values has been called
-    
-    NOTE: Be careful not to 'remove' the same cell multiple times
-    i.e. if a cell is already 0, it cannot be removed again
-
-    Parameters: None
-    Return: None
-    '''
-
     def remove_cells(self):
-        pass
+        """
+        Removes the appropriate number of cells from the board
+        This is done by setting some values to 0
+        Should be called after the entire solution has been constructed
+        i.e. after fill_values has been called
 
+        NOTE: Be careful not to 'remove' the same cell multiple times
+        i.e. if a cell is already 0, it cannot be removed again
 
-'''
-DO NOT CHANGE
-Provided for students
-Given a number of rows and number of cells to remove, this function:
-1. creates a SudokuGenerator
-2. fills its values and saves this as the solved state
-3. removes the appropriate number of cells
-4. returns the representative 2D Python Lists of the board and solution
-
-Parameters:
-size is the number of rows/columns of the board (9 for this project)
-removed is the number of cells to clear (set to 0)
-
-Return: list[list] (a 2D Python list to represent the board)
-'''
+        Parameters: None
+        Return: None
+        """
+        count = 0
+        while count != self.removed_cells:
+            row = random.randint(0, 8)
+            col = random.randint(0, 8)
+            if self.board[row][col] != 0:
+                self.board[row][col] = 0
+            count += 1
 
 
 def generate_sudoku(size, removed):
+    """
+    DO NOT CHANGE
+    Provided for students
+    Given a number of rows and number of cells to remove, this function:
+    1. creates a SudokuGenerator
+    2. fills its values and saves this as the solved state
+    3. removes the appropriate number of cells
+    4. returns the representative 2D Python Lists of the board and solution
+
+    Parameters:
+    size is the number of rows/columns of the board (9 for this project)
+    removed is the number of cells to clear (set to 0)
+
+    Return: list[list] (a 2D Python list to represent the board)
+    """
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
     board = sudoku.get_board()
@@ -282,21 +283,6 @@ def generate_sudoku(size, removed):
     return board
 
 
-"""
-Testing Below
-"""
-
 if __name__ == "__main__":
-    obj = SudokuGenerator(9, 0)
-    obj.print_board()
-    # print("1 allowed in row 0?: ", obj.valid_in_row(0, 1))
-    # print("5 allowed in row 0?: ", obj.valid_in_row(0, 5))
-    # print("1 allowed in col 0?: ", obj.valid_in_col(0, 1))
-    # print("2 allowed in col 0?: ", obj.valid_in_col(0, 2))
-    # print("is 1 allowed in the box?", obj.valid_in_box(0, 4, 2))
-    # print("is 1 a valid number: ", obj.is_valid(0, 4, 1))
-
-    obj.fill_values()
-    obj.print_board()
-
-    print("Everything passed")
+    # Get an example board with 5 removes values
+    print(generate_sudoku(9, 5))
