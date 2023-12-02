@@ -40,7 +40,7 @@ class SudokuGenerator:
         #     [3, 1, 2, 6, 5, 4, 7, 8, 9],
         #     [8, 7, 6, 9, 2, 3, 4, 1, 5]]
 
-        self.box_length = math.sqrt(row_length)
+        self.box_length = int(math.sqrt(row_length))
 
     def get_board(self):
         """
@@ -207,10 +207,10 @@ class SudokuGenerator:
             return True
         if row < self.box_length:
             if col < self.box_length:
-                col = int(self.box_length)
+                col = self.box_length
         elif row < self.row_length - self.box_length:
             if col == int(row // self.box_length * self.box_length):
-                col += int(self.box_length)
+                col += self.box_length
         else:
             if col == self.row_length - self.box_length:
                 row += 1
@@ -296,8 +296,7 @@ if __name__ == "__main__":
     # print("is 1 allowed in the box?", obj.valid_in_box(0, 4, 2))
     # print("is 1 a valid number: ", obj.is_valid(0, 4, 1))
 
-    obj.fill_diagonal()
-    obj.fill_remaining(0, 3)
+    obj.fill_values()
     obj.print_board()
 
     print("Everything passed")
