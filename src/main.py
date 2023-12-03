@@ -21,7 +21,12 @@ class GameState:
 
         # FIXME: Testing elements
         self.test_button = Button(150, 75, 'click me', lambda: print('click!'))
-        self.test_cell = Cell(0, 2, 2, screen)
+        self.test_cell0 = Cell(1, 4, 4, self.screen)
+        self.test_cell1 = Cell(1, 5, 5, self.screen)
+        self.test_cell2 = Cell(2, 5, 6, self.screen)
+        self.test_cell3 = Cell(0, 5, 7, self.screen)
+        self.test_cell4 = Cell(4, 5, 8, self.screen)
+        self.test_cell5 = Cell(4, 8, 8, self.screen)
 
     @staticmethod
     def check_events():
@@ -51,7 +56,13 @@ class GameState:
 
         # FIXME: Testing drawing
         self.test_button.draw(self.screen)
-        self.test_cell.draw()
+        self.test_cell0.draw()
+        self.test_cell1.draw()
+        self.test_cell2.draw()
+        self.test_cell3.draw()
+        self.test_cell4.draw()
+        self.test_cell3.set_sketched_value(6)
+        self.test_cell3.set_selected(True)
 
         pg.display.flip()  # Re-renders the screen
 
