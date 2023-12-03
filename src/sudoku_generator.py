@@ -1,4 +1,5 @@
-import math, random
+import math
+import random
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -26,20 +27,7 @@ class SudokuGenerator:
         """
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = [[0 for i in range(row_length)] for j in range(row_length)]
-
-        # Example sudoku for testing purposes
-        # self.board = [
-        #     [4, 8, 7, 3, 1, 2, 5, 9, 6],
-        #     [5, 6, 3, 4, 9, 7, 1, 2, 8],
-        #     [1, 2, 9, 5, 6, 8, 3, 4, 7],
-        #     [2, 4, 5, 8, 3, 6, 9, 7, 1],
-        #     [6, 3, 8, 1, 7, 9, 2, 5, 4],
-        #     [7, 9, 1, 2, 4, 5, 8, 6, 3],
-        #     [9, 5, 4, 7, 8, 1, 6, 3, 2],
-        #     [3, 1, 2, 6, 5, 4, 7, 8, 9],
-        #     [8, 7, 6, 9, 2, 3, 4, 1, 5]]
-
+        self.board = [[0 for _ in range(row_length)] for _ in range(row_length)]
         self.box_length = int(math.sqrt(row_length))
 
     def get_board(self):
@@ -107,7 +95,7 @@ class SudokuGenerator:
 
         Return: boolean
         """
-        # Method 1: Finds the top left corner of the default box for the given index
+        # Finds the top left corner of the default box for the given index
         row_i = row_start  # Tracks new row index
         col_j = col_start  # Tracks new col index
 
@@ -118,7 +106,8 @@ class SudokuGenerator:
         while col_j % 3 != 0:
             col_j -= 1
 
-        # Finally, check the box to see if the number is a valid addition.
+        # Finally, check every cell in the box to see if the number would
+        # be a valid addition.
         for i in range(row_i, row_i + 3):
             for j in range(col_j, col_j + 3):
                 if num == self.board[i][j]:
@@ -133,7 +122,7 @@ class SudokuGenerator:
 
         Parameters:
         row and col are the row index and col index of the cell to check in the board
-        num is the value to test if it is safe to enter in this cell
+        num is the value to test if it is safe to enter it into this cell
 
         Return: boolean
         """
@@ -159,7 +148,7 @@ class SudokuGenerator:
         col_j = col_start  # Tracks new col index
 
         # If the indexes aren't divisible by 3, subtract one until it is.
-        # This way, it will find the closest default box
+        # This way, it will find the closest default box's top left corner.
         while row_i % 3 != 0:
             row_i -= 1
         while col_j % 3 != 0:
@@ -197,9 +186,9 @@ class SudokuGenerator:
         row, col specify the coordinates of the first empty (0) cell
 
         Return:
-        boolean (whether or not we could solve the board)
+        boolean (whether we could solve the board)
         """
-        if (col >= self.row_length and row < self.row_length - 1):
+        if col >= self.row_length and row < self.row_length - 1:
             row += 1
             col = 0
         if row >= self.row_length and col >= self.row_length:
@@ -284,5 +273,5 @@ def generate_sudoku(size, removed):
 
 
 if __name__ == "__main__":
-    # Get an example board with 5 removes values
-    print(generate_sudoku(9, 5))
+    # Get an example board with 5 removed values
+    print(generate_sudoku(9, 0))
