@@ -1,5 +1,6 @@
 import pygame as pg
 from button import Button
+from cell import Cell
 import config
 import pubsub
 
@@ -18,8 +19,9 @@ class GameState:
         """
         self.screen = screen
 
-        # Temporary button for testing
+        # FIXME: Testing elements
         self.test_button = Button(150, 75, 'click me', lambda: print('click!'))
+        self.test_cell = Cell(0, 2, 2, screen)
 
     @staticmethod
     def check_events():
@@ -47,7 +49,10 @@ class GameState:
         # Base background
         self.screen.fill(config.Color.BACKGROUND)
 
+        # FIXME: Testing drawing
         self.test_button.draw(self.screen)
+        self.test_cell.draw()
+
         pg.display.flip()  # Re-renders the screen
 
 
