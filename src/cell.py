@@ -20,7 +20,7 @@ class Cell:
         self.selected = selected
         self.is_editable = is_editable
         self.value = value  # The confirmed value in the cell
-        self.sketched_value = -1  # The unconfirmed value in the cell
+        self.sketched_value = 0  # The unconfirmed value in the cell
         self.size = size
 
         self.image = pg.Surface((self.size, self.size))
@@ -28,16 +28,28 @@ class Cell:
         self.rect.topleft = topleft
         self.background_color = Color.CELL_BACKGROUND
 
-        # Subscribe to mouse button up events
+        # Subscribe to mouse button up events and key up events
         pubsub.subscribe(pg.MOUSEBUTTONUP, self.on_click)
         pubsub.subscribe(pg.KEYUP, self.on_key_up)
 
     def on_key_up(self, key):
-        # Function for if the cell is selected and and it is editable, then when a number is pressed, it will be set
-        # as value of the cell.
+        """
+        Checks if the key pressed is a number key. If so, set the sketched value as the number.
+        If the backspace key is pressed, set the sketched value to 0.
+        If the enter key is pressed, set the value as the sketched value.
+
+        :param int key: The key pressed
+        :return: None
+        """
         number_keys = [pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9]
         if self.selected and self.is_editable and key in number_keys:
-            self.value = int(pg.key.name(key))
+            self.sketched_value = int(pg.key.name(key))
+        elif self.selected and self.is_editable and key == pg.K_BACKSPACE:
+            self.sketched_value = 0
+        elif self.selected and self.is_editable and key == pg.K_RETURN:
+            self.value = self.sketched_value
+            self.sketched_value = 0
+            self.is_editable = False
 
     def on_click(self, mouse_pos):
         """
@@ -82,7 +94,7 @@ class Cell:
         Draws the cell and the value within it, as long as the value is non-zero.
         Outlines the cell Red if it currently selected.
 
-        :param: None
+        :param: other_surface: The surface to draw the cell onto
         :return: None
         """
         self.image.fill(self.background_color)
@@ -91,19 +103,19 @@ class Cell:
         cell_font = pg.font.Font(None, CELL_FONT)
         sketched_font = pg.font.Font(None, SKETCHED_FONT)
 
-        # Draw the value only if it is non-zero
-        # And draw any sketched values in light gray in the top left corner of the cell
+        # Draw the value if it is non-zero
         if self.value != 0:
-            color = Color.RED if self.is_editable else Color.BLACK
+            color = Color.BLACK
             render = cell_font.render(str(self.value), 1, color)
             render_rect = render.get_rect(center=self.image.get_rect().center)
             self.image.blit(render, render_rect)
 
-        # TODO: Might be unnecessary code below in comment
-        # elif self.sketched_value != -1:
-        #     render = sketched_font.render(str(self.sketched_value), 1, Color.LIGHT_GRAY)
-        #     render_rect = render.get_rect(center=self.image.get_rect().center)
-        #     self.image.blit(render, render_rect)
+        # Draw the sketched value if it is non-zero, and render it in the top left corner
+        if self.sketched_value != 0:
+            color = Color.LIGHT_GRAY
+            render = sketched_font.render(str(self.sketched_value), 1, color)
+            render_rect = render.get_rect(topleft=(10, 10))
+            self.image.blit(render, render_rect)
 
         # Draw the cell outline if it is selected
         if self.selected:
