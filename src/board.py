@@ -30,7 +30,8 @@ class Board:
             for j, value in enumerate(row):
                 x = self.cell_size * i
                 y = self.cell_size * j
-                self.cells[i][j] = Cell(value, (x, y), self.cell_size)
+                is_editable = value == 0
+                self.cells[i][j] = Cell(value, (x, y), self.cell_size, is_editable)
     
     def draw(self, other_surface):
         self.image.fill(config.Color.LIGHT_GRAY)
