@@ -26,12 +26,12 @@ class GameState:
         """
         removed_cells=0
         if mode == 'easy_mode':
-            removed_cells = 30
+            removed_cells = 51
         elif mode == 'medium_mode':
-            removed_cells = 40
+            removed_cells = 41
         elif mode == 'hard_mode':
-            removed_cells = 50
-
+            removed_cells = 31
+        print(removed_cells)
         self.generator = SudokuGenerator(config.ROW_LENGTH, removed_cells)
         self.screen = screen
         self.screen_rect = screen.get_rect()
