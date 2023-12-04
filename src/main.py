@@ -84,7 +84,9 @@ def main():
     screen = new_screen()
     game = GameState(screen)
 
+    fps_clock = pg.time.Clock()
     while True:
+        fps_clock.tick(30) # limit to 30 FPS
         game.check_events()
         game.update()
         game.draw()
