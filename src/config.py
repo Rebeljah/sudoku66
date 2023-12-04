@@ -1,5 +1,4 @@
 from enum import Enum
-import pygame as pg
 
 
 class Color(tuple, Enum):
@@ -7,8 +6,7 @@ class Color(tuple, Enum):
     RED = (255, 0, 0)
     LIGHT_GRAY = (128, 128, 128)
     BACKGROUND = (255, 255, 255)
-    CELL_BACKGROUND = (204, 230, 255)
-    NUM_BACKGROUND = (0, 26, 9)
+    CELL_BACKGROUND = (255, 255, 255)
     BUTTON_BACKGROUND = (153, 174, 191)
 
 

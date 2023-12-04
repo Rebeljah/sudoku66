@@ -1,12 +1,6 @@
 import math
 import random
 
-"""
-This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
-https://www.geeksforgeeks.org/program-sudoku-generator/
-
-"""
-
 
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
@@ -245,7 +239,7 @@ class SudokuGenerator:
             col = random.randint(0, 8)
             if self.board[row][col] != 0:
                 self.board[row][col] = 0
-            count += 1
+                count += 1
 
 
 def generate_sudoku(size, removed):
@@ -266,7 +260,7 @@ def generate_sudoku(size, removed):
     """
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
-    board = sudoku.get_board()
+    # board = sudoku.get_board()
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board

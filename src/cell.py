@@ -94,7 +94,7 @@ class Cell:
         # Draw the value only if it is non-zero
         # And draw any sketched values in light gray in the top left corner of the cell
         if self.value != 0:
-            color = Color.BLACK if self.is_editable else Color.RED
+            color = Color.RED if self.is_editable else Color.BLACK
             render = cell_font.render(str(self.value), 1, color)
             render_rect = render.get_rect(center=self.image.get_rect().center)
             self.image.blit(render, render_rect)

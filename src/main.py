@@ -18,7 +18,7 @@ class GameState:
         Args:
         - screen (pg.Surface): The Pygame surface to draw the game.
         """
-        self.generator = SudokuGenerator(config.ROW_LENGTH, 10)
+        self.generator = SudokuGenerator(config.ROW_LENGTH, 15)
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.board = Board(self.screen_rect.width)
