@@ -6,7 +6,9 @@ class Color(tuple, Enum):
     BLACK = (0, 0, 0)
     RED = (255, 0, 0)
     LIGHT_GRAY = (128, 128, 128)
-    BACKGROUND = (81, 86, 121)
+    BACKGROUND = (255, 255, 255)
+    CELL_BACKGROUND = (204, 230, 255)
+    NUM_BACKGROUND = (0, 26, 9)
     BUTTON_BACKGROUND = (153, 174, 191)
 
 
