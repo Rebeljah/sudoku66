@@ -47,7 +47,7 @@ class Cell:
             self.sketched_value = int(pg.key.name(key))
         elif self.selected and self.is_editable and key == pg.K_BACKSPACE:
             self.sketched_value = 0
-        elif self.selected and self.is_editable and key == pg.K_RETURN:
+        elif self.selected and self.is_editable and key == pg.K_RETURN and self.sketched_value != 0:
             self.value = self.sketched_value
             self.sketched_value = 0
             self.is_editable = False
