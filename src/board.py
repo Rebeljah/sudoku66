@@ -12,6 +12,9 @@ class Board:
         self.rect = self.image.get_rect()
 
         self.generator = SudokuGenerator(config.ROW_LENGTH, 10)
+        self.generator.fill_values()
+        self.generator.remove_cells()
+
         board_state = self.generator.get_board()
         self.selected_cell = (0, 0)
         self.board_size = len(board_state)

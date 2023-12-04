@@ -1,8 +1,6 @@
 import pygame as pg
 
 from sudoku_generator import SudokuGenerator
-from button import Button
-from cell import Cell
 from board import Board
 import config
 import pubsub
@@ -37,6 +35,8 @@ class GameState:
                 pubsub.publish(event.type, pg.mouse.get_pos())
             elif event.type == pg.MOUSEMOTION:
                 pubsub.publish(event.type, pg.mouse.get_pos())
+            elif event.type == pg.KEYUP:
+                pubsub.publish(event.type, event.key)
 
     def update(self):
         """
@@ -86,7 +86,7 @@ def main():
 
     fps_clock = pg.time.Clock()
     while True:
-        fps_clock.tick(30) # limit to 30 FPS
+        fps_clock.tick(30)  # limit to 30 FPS
         game.check_events()
         game.update()
         game.draw()
