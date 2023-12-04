@@ -42,12 +42,22 @@ class Board:
         for cell in self.get_all_cells():
             cell.draw(self.image)
 
-        # draw grid lines
+        # draw grid lines.
         for x in range(0, self.rect.width + 1, self.cell_size):
-            pg.draw.line(self.image, config.Color.BLACK, (x, 0), (x, self.rect.height))
+
+            # Every third line should be thicker to indicate the 3x3 boxes.
+            if x % (self.cell_size * 3) == 0:
+                pg.draw.line(self.image, config.Color.BLACK, (x, 0), (x, self.rect.height), 3)
+            else:
+                pg.draw.line(self.image, config.Color.BLACK, (x, 0), (x, self.rect.height))
 
         for y in range(0, self.rect.height + 1, self.cell_size):
-            pg.draw.line(self.image, config.Color.BLACK, (0, y), (self.rect.width, y))
+
+            # Every third line should be thicker to indicate the 3x3 boxes.
+            if y % (self.cell_size * 3) == 0:
+                pg.draw.line(self.image, config.Color.BLACK, (0, y), (self.rect.width, y), 3)
+            else:
+                pg.draw.line(self.image, config.Color.BLACK, (0, y), (self.rect.width, y))
 
         other_surface.blit(self.image, self.rect)
 
