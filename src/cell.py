@@ -32,9 +32,10 @@ class Cell:
         pubsub.subscribe(pg.MOUSEBUTTONUP, self.on_click)
         pubsub.subscribe(pg.KEYUP, self.on_key_up)
 
-    def on_key_up(self, key):
+    def on_key_up(self, key) -> None:
         """
-        Checks if the key pressed is a number key. If so, set the sketched value as the number.
+        Checks if the key pressed a key.
+        If a number key is pressed, set the sketched value as the number.
         If the backspace key is pressed, set the sketched value to 0.
         If the enter key is pressed, set the value as the sketched value.
 
@@ -51,7 +52,7 @@ class Cell:
             self.sketched_value = 0
             self.is_editable = False
 
-    def on_click(self, mouse_pos):
+    def on_click(self, mouse_pos) -> None:
         """
         Checks if the mouse click is within the cell's rect.
         If so, set the cell as selected.

@@ -9,9 +9,11 @@ from cell import Cell
 from board import Board
 import config
 import pubsub
-from start_menu import  draw_game_start
+from start_menu import draw_game_start
 from game_won_menu import draw_game_won
-from  game_over_menu import draw_game_over
+from game_over_menu import draw_game_over
+
+
 class GameState:
     """
     Class to manage and update game objects and draw to screen.
@@ -24,7 +26,7 @@ class GameState:
         Args:
         - screen (pg.Surface): The Pygame surface to draw the game.
         """
-        removed_cells=0
+        removed_cells = 0
         if mode == 'easy_mode':
             removed_cells = 51
         elif mode == 'medium_mode':
@@ -80,7 +82,7 @@ def new_screen() -> pg.Surface:
     monitor_height = pg.display.Info().current_h
     height = width = 0.70 * monitor_height
 
-    screen = pg.display.set_mode((height, width+100))
+    screen = pg.display.set_mode((height, width + 100))
     pg.display.set_caption('Sudoku 66')
 
     return screen
@@ -92,16 +94,18 @@ def main():
     """
     # Need to initialize display module before making a new screen
     pg.display.init()
+
     # Init font package before using it
     pg.font.init()
     monitor_height = pg.display.Info().current_h
     height = width = 0.70 * monitor_height
-    start_screen = pygame.display.set_mode((height,width))
-    mode =  draw_game_start(start_screen)
+    start_screen = pygame.display.set_mode((height, width))
+    mode = draw_game_start(start_screen)
+
     if mode:
         print('creating new game board')
         screen = new_screen()
-        game = GameState(screen, mode = mode)
+        game = GameState(screen, mode=mode)
 
     fps_clock = pg.time.Clock()
     while True:
