@@ -49,6 +49,8 @@ class GameState:
                 pubsub.publish(event.type, pg.mouse.get_pos())
             elif event.type == pg.MOUSEMOTION:
                 pubsub.publish(event.type, pg.mouse.get_pos())
+            elif event.type == pg.KEYUP:
+                pubsub.publish(event.type, event.key)
 
     def update(self):
         """
@@ -88,7 +90,6 @@ def main():
     """
     Main function to run the game.
     """
-
     # Need to initialize display module before making a new screen
     pg.display.init()
     # Init font package before using it
@@ -102,14 +103,12 @@ def main():
         screen = new_screen()
         game = GameState(screen, mode = mode)
 
-        while True:
-            game.check_events()
-            game.update()
-            game.draw()
-
-    # draw_game_won(screen)
-    # draw_game_over(screen)
-
+    fps_clock = pg.time.Clock()
+    while True:
+        fps_clock.tick(30)  # limit to 30 FPS
+        game.check_events()
+        game.update()
+        game.draw()
 
 
 if __name__ == '__main__':
