@@ -2,6 +2,7 @@ import pygame
 import sys
 
 from config import Color
+import config
 
 
 def draw_game_start(screen):
@@ -42,7 +43,9 @@ def draw_game_start(screen):
     screen.blit(medium_surface, medium_rectangle)
     screen.blit(hard_surface, hard_rectangle)
 
+    fps_clock = pygame.time.Clock()  # clock to limit fps
     while True:
+        fps_clock.tick(config.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()

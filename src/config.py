@@ -12,6 +12,7 @@ class Color(tuple, Enum):
     BUTTON_BACKGROUND = (153, 174, 191)
 
 
+FPS = 30
 ROW_LENGTH = 9
 BUTTON_FONT_PATH = './assets/Blox2.ttf'
 CELL_FONT = 50  # TODO: Should this be dependant on the size of the displayed area?

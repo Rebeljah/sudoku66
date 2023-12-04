@@ -1,5 +1,6 @@
 import pygame, sys
 from config import Color
+import config
 
 
 def draw_game_over(screen):
@@ -33,7 +34,9 @@ def draw_game_over(screen):
     screen.blit(start_surface, start_rectangle)
     screen.blit(quit_surface, quit_rectangle)
 
+    fps_clock = pygame.time.Clock()  # clock to limit fps
     while True:
+        fps_clock.tick(config.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
