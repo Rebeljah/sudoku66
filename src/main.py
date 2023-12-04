@@ -1,6 +1,9 @@
 import pygame as pg
+
+from sudoku_generator import SudokuGenerator
 from button import Button
 from cell import Cell
+from board import Board
 import config
 import pubsub
 
@@ -17,16 +20,10 @@ class GameState:
         Args:
         - screen (pg.Surface): The Pygame surface to draw the game.
         """
+        self.generator = SudokuGenerator(config.ROW_LENGTH, 10)
         self.screen = screen
-
-        # FIXME: Testing elements
-        self.test_button = Button(150, 75, 'click me', lambda: print('click!'))
-        self.test_cell0 = Cell(1, 4, 4, self.screen)
-        self.test_cell1 = Cell(1, 5, 5, self.screen)
-        self.test_cell2 = Cell(2, 5, 6, self.screen)
-        self.test_cell3 = Cell(0, 5, 7, self.screen)
-        self.test_cell4 = Cell(4, 5, 8, self.screen)
-        self.test_cell5 = Cell(4, 8, 8, self.screen)
+        self.screen_rect = screen.get_rect()
+        self.board = Board(self.screen_rect.width)
 
     @staticmethod
     def check_events():
@@ -52,17 +49,9 @@ class GameState:
         Draws the UI onto the Pygame screen.
         """
         # Base background
-        self.screen.fill(config.Color.BACKGROUND)
+        self.screen.fill(config.Color.RED)
 
-        # FIXME: Testing drawing
-        self.test_button.draw(self.screen)
-        self.test_cell0.draw()
-        self.test_cell1.draw()
-        self.test_cell2.draw()
-        self.test_cell3.draw()
-        self.test_cell4.draw()
-        self.test_cell3.set_sketched_value(6)
-        self.test_cell3.set_selected(True)
+        self.board.draw(self.screen)
 
         pg.display.flip()  # Re-renders the screen
 

@@ -2,14 +2,21 @@ from copy import deepcopy
 import pygame as pg
 
 from cell import Cell
+from sudoku_generator import SudokuGenerator
+import config
 
 
 class Board:
-    def __init__(self, width: int, height: int, board_state: list[list[int]]):
-        self.image = pg.Surface((width, height))
+    def __init__(self, width: int):
+        self.image = pg.Surface((width, width))
         self.rect = self.image.get_rect()
 
+        self.generator = SudokuGenerator(config.ROW_LENGTH, 10)
+        board_state = self.generator.get_board()
         self.selected_cell = (0, 0)
+        self.board_size = len(board_state)
+        self.cell_size = width // self.board_size
+
 
         # convert values in board to cell objects
         self.initial_state = deepcopy(board_state)
@@ -21,15 +28,30 @@ class Board:
 
         for i, row in enumerate(self.cells):
             for j, value in enumerate(row):
-                self.cells[i][j] = Cell(value, i, j)
+                x = self.cell_size * i
+                y = self.cell_size * j
+                self.cells[i][j] = Cell(value, (x, y), self.cell_size)
     
     def draw(self, other_surface):
+        self.image.fill(config.Color.LIGHT_GRAY)
+
+        #draw cells
+        for cell in self.get_all_cells():
+            cell.draw(self.image)
+
+        # draw grid lines
+        for x in range(0, self.rect.width + 1, self.cell_size):
+            pg.draw.line(self.image, config.Color.BLACK, (x, 0), (x, self.rect.height))
+        
+        for y in range(0, self.rect.height + 1, self.cell_size):
+            pg.draw.line(self.image, config.Color.BLACK, (0, y), (self.rect.width, y))
+
         other_surface.blit(self.image, self.rect)
     
     def reset(self):
         self._build_cells(self.initial_state)
     
-    def get_all_cells(self):
+    def get_all_cells(self) -> list[Cell]:
         cells = []
 
         if self.cells is None:
