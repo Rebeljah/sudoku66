@@ -26,13 +26,6 @@ class GameState:
         Args:
         - screen (pg.Surface): The Pygame surface to draw the game.
         """
-        removed_cells = 0
-        # if mode == 'easy_mode':
-        #     removed_cells = 30
-        # elif mode == 'medium_mode':
-        #     removed_cells = 40
-        # elif mode == 'hard_mode':
-        #     removed_cells = 50
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.board = Board(self.screen_rect.width, mode)
@@ -63,7 +56,7 @@ class GameState:
         Draws the UI onto the Pygame screen.
         """
         # Base background
-        self.screen.fill(config.Color.RED)
+        self.screen.fill(config.Color.BACKGROUND)
 
         self.board.draw(self.screen)
 

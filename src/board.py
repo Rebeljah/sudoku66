@@ -44,7 +44,7 @@ class Board:
                 self.cells[i][j] = Cell(value, (x, y), self.cell_size, is_editable)
 
     def draw(self, other_surface):
-        self.image.fill(config.Color.LIGHT_GRAY)
+        self.image.fill(config.Color.RED)  # TODO: Get rid of the red outline around the box.
 
         # draw cells
         for cell in self.get_all_cells():

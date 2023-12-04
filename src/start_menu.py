@@ -12,14 +12,14 @@ def draw_game_start(screen):
 
     monitor_height = pygame.display.Info().current_h
     height = width = 0.70 * monitor_height
-    title_surface = start_title_font.render('Welcome to Sudoku', 0, Color.WHITE)
+    title_surface = start_title_font.render('Welcome to Sudoku', 1, Color.TEXT)
     title_rectangle = title_surface.get_rect(
         center=(height // 2 + 100, width // 2 - 150))
     screen.blit(title_surface, title_rectangle)
 
-    easy_text = button_font.render('Easy Mode', 0, (255, 255, 255))
-    medium_text = button_font.render('Medium Mode', 0, (255, 255, 255))
-    hard_text = button_font.render('Hard Mode', 0, (255, 255, 255))
+    easy_text = button_font.render('Easy Mode', 1, (255, 255, 255))
+    medium_text = button_font.render('Medium Mode', 1, (255, 255, 255))
+    hard_text = button_font.render('Hard Mode', 1, (255, 255, 255))
 
     easy_surface = pygame.Surface((easy_text.get_size()[0] + 20, easy_text.get_size()[1] + 20))
     easy_surface.fill(Color.BLACK)
