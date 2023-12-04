@@ -7,11 +7,19 @@ import config
 
 
 class Board:
-    def __init__(self, width: int):
+    def __init__(self, width: int, difficulty):
         self.image = pg.Surface((width, width))
         self.rect = self.image.get_rect()
 
-        self.generator = SudokuGenerator(config.ROW_LENGTH, 15)
+        # Determines removed_cells based on difficulty
+        if difficulty == 'easy_mode':
+            removed_cells = 30
+        elif difficulty == 'medium_mode':
+            removed_cells = 40
+        elif difficulty == 'hard_mode':
+            removed_cells = 50
+
+        self.generator = SudokuGenerator(config.ROW_LENGTH, removed_cells)
         self.generator.fill_values()
         self.generator.remove_cells()
 

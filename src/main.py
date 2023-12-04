@@ -27,17 +27,15 @@ class GameState:
         - screen (pg.Surface): The Pygame surface to draw the game.
         """
         removed_cells = 0
-        if mode == 'easy_mode':
-            removed_cells = 51
-        elif mode == 'medium_mode':
-            removed_cells = 41
-        elif mode == 'hard_mode':
-            removed_cells = 31
-        print(removed_cells)
-        self.generator = SudokuGenerator(config.ROW_LENGTH, removed_cells)
+        # if mode == 'easy_mode':
+        #     removed_cells = 30
+        # elif mode == 'medium_mode':
+        #     removed_cells = 40
+        # elif mode == 'hard_mode':
+        #     removed_cells = 50
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.board = Board(self.screen_rect.width)
+        self.board = Board(self.screen_rect.width, mode)
 
     @staticmethod
     def check_events():
