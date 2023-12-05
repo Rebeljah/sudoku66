@@ -57,11 +57,15 @@ class StartMenuView:
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
 
-        start_title_font = pygame.font.Font(None, 50)
-        title_surface = start_title_font.render('Welcome to Sudoku', 1, Color.TEXT)
+        font = pygame.font.Font(None, 50)
+        title_surface = font.render('SUDOKU', 1, Color.TEXT)
         title_rect = title_surface.get_rect()
         title_rect.centerx = self.rect.w // 2
         title_rect.top = int(self.rect.h * 0.10)
+        subheading_surface = font.render('choose a difficulty...', 1, Color.TEXT)
+        subheading_rect = subheading_surface.get_rect()
+        subheading_rect.centerx = self.rect.w // 2
+        subheading_rect.top = title_rect.bottom + 100
 
         button_height = int(0.09 * self.rect.h)
         start_game = game_state.start_game
@@ -75,6 +79,7 @@ class StartMenuView:
         hard_button.rect.left = medium_button.rect.right + 15
 
         self.image.blit(title_surface, title_rect)
+        self.image.blit(subheading_surface, subheading_rect)
         easy_button.draw(self.image)
         medium_button.draw(self.image)
         hard_button.draw(self.image)
