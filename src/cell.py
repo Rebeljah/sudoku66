@@ -8,7 +8,7 @@ class Cell:
     Represents a single cell in the Sudoku board. A typical board consists of 81 cells.
     """
 
-    def __init__(self, value, topleft, size, is_editable, selected=False) -> None:
+    def __init__(self, value, topleft, position, size, is_editable, selected=False) -> None:
         """
         Constructor for the Cell class
 
@@ -17,6 +17,7 @@ class Cell:
         :param int col: The col coordinate of the cell
         :return: None
         """
+        self.row, self.column = position
         self.selected = selected
         self.is_editable = is_editable
         self.value = value  # The confirmed value in the cell

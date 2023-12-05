@@ -77,6 +77,8 @@ class GameState:
                 pubsub.publish(event.type, pg.mouse.get_pos())
             elif event.type == pg.MOUSEMOTION:
                 pubsub.publish(event.type, pg.mouse.get_pos())
+            elif event.type == pg.KEYDOWN:
+                pubsub.publish(event.type, event.key)
             elif event.type == pg.KEYUP:
                 pubsub.publish(event.type, event.key)
 

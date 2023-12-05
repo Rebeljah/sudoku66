@@ -36,6 +36,7 @@ class Board:
 
         #listen for click to select a cell
         pubsub.subscribe(pg.MOUSEBUTTONUP, self._check_click)
+        pubsub.subscribe(pg.KEYDOWN, self._check_arrow_key)
     
     def _check_click(self, mouse_pos):
         if not self.rect.collidepoint(mouse_pos):
@@ -44,7 +45,26 @@ class Board:
         col = (mouse_pos[0] - self.rect.x) // self.cell_size
         row = (mouse_pos[1] - self.rect.y) // self.cell_size
 
-        self._select_cell(self.cells[col][row])                    
+        self._select_cell(self.cells[row][col])
+
+    def _check_arrow_key(self, key):
+        if self.selected_cell is None:
+            row = col = 0
+        else:
+            row, col = self.selected_cell.row, self.selected_cell.column
+            if key == pg.K_UP:
+                row -= 1
+            if key == pg.K_DOWN:
+                row += 1
+            if key == pg.K_LEFT:
+                col -= 1 
+            if key == pg.K_RIGHT:
+                col += 1
+
+        row %= self.board_size
+        col %= self.board_size
+
+        self._select_cell(self.cells[row][col])                
     
     def _select_cell(self, cell):
         if self.selected_cell:
@@ -58,10 +78,10 @@ class Board:
 
         for i, row in enumerate(self.cells):
             for j, value in enumerate(row):
-                x = self.cell_size * i
-                y = self.cell_size * j
+                y = self.cell_size * i
+                x = self.cell_size * j
                 is_editable = value == 0
-                self.cells[i][j] = Cell(value, (x, y), self.cell_size, is_editable)
+                self.cells[i][j] = Cell(value, (x, y), (i, j), self.cell_size, is_editable)
 
     def draw(self, other_surface):
         self.image.fill(config.Color.RED)  # TODO: Get rid of the red outline around the box.
