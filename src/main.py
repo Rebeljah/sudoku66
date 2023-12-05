@@ -47,23 +47,19 @@ class GameState:
         self.ui_mode = 'start_game'
         self.board = None
     
-    def exit(self):       
+    def exit(self):
+        
+
         sys.exit()
 
     def _check_win(self, cell):
         if not self.board.is_full():
             return
         
-        for row in range(len(self.board.cells)):
-            for col in range(len(self.board.cells[row])):
-                self.board.generator.board[row][col] = self.board.cells[row][col].value
-
-        for row in range(len(self.board.cells)):
-            for col in range(len(self.board.cells[row])):
-                if not self.board.generator.is_valid(row, col, self.board.generator.board[row][col]):
-                    self.ui_mode = 'game_lost'
-        else:
+        if self.board.is_solved():
             self.ui_mode = 'game_won'
+        else:
+            self.ui_mode = 'game_lost'
 
     @staticmethod
     def check_events():

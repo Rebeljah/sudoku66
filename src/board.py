@@ -132,3 +132,34 @@ class Board:
                 return False
         else:
             return True
+
+    def is_solved(self):
+        all_cells = self.get_all_cells()
+    
+        for row in range(self.board_size):
+            unique = set(cell.value for cell in all_cells if cell.row == row)
+            if len(unique) < self.board_size:
+                return False
+        
+        for col in range(self.board_size):
+            unique = set(cell.value for cell in all_cells if cell.column == col)
+            if len(unique) < self.board_size:
+                return False
+        
+        # check for unqiue boxes
+        box_size = self.board_size // 3
+        for row_start in range(0, self.board_size, box_size):
+            for col_start in range(0, self.board_size, box_size):
+                row_end, col_end = row_start + self.board_size, col_start + self.board_size
+                unique = set()
+                for cell in all_cells:
+                    if (
+                        cell.row in range(row_start, row_end)
+                        and cell.column in range(col_start, col_end)
+                    ): unique.add(cell.value)
+                
+                if len(unique) < box_size ** 2:
+                    return False
+        
+        return True
+                       
