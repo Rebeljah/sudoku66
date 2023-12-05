@@ -4,6 +4,7 @@ import pygame as pg
 from cell import Cell
 from sudoku_generator import SudokuGenerator
 import config
+import pubsub
 
 
 class Board:
@@ -12,11 +13,11 @@ class Board:
         self.rect = self.image.get_rect()
 
         # Determines removed_cells based on difficulty
-        if difficulty == 'easy_mode':
+        if difficulty == 'easy':
             removed_cells = 30
-        elif difficulty == 'medium_mode':
+        elif difficulty == 'medium':
             removed_cells = 40
-        elif difficulty == 'hard_mode':
+        elif difficulty == 'hard':
             removed_cells = 50
 
         self.generator = SudokuGenerator(config.ROW_LENGTH, removed_cells)
@@ -24,7 +25,7 @@ class Board:
         self.generator.remove_cells()
 
         board_state = self.generator.get_board()
-        self.selected_cell = (0, 0)
+        self.selected_cell = None
         self.board_size = len(board_state)
         self.cell_size = width // self.board_size
 
@@ -32,6 +33,25 @@ class Board:
         self.initial_state = deepcopy(board_state)
         self.cells = None
         self._build_cells(board_state)
+
+        #listen for click to select a cell
+        pubsub.subscribe(pg.MOUSEBUTTONUP, self._check_click)
+    
+    def _check_click(self, mouse_pos):
+        if not self.rect.collidepoint(mouse_pos):
+            return
+        
+        col = (mouse_pos[0] - self.rect.x) // self.cell_size
+        row = (mouse_pos[1] - self.rect.y) // self.cell_size
+
+        self._select_cell(self.cells[col][row])                    
+    
+    def _select_cell(self, cell):
+        if self.selected_cell:
+            self.selected_cell.selected = False
+
+        cell.selected = True
+        self.selected_cell = cell
 
     def _build_cells(self, board_state):
         self.cells = deepcopy(board_state)
@@ -49,6 +69,8 @@ class Board:
         # draw cells
         for cell in self.get_all_cells():
             cell.draw(self.image)
+            if cell is self.selected_cell:
+                pg.draw.rect(self.image, config.Color.RED, cell.rect, 3)
 
         # draw grid lines.
         for x in range(0, self.rect.width + 1, self.cell_size):

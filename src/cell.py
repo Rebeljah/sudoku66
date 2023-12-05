@@ -28,8 +28,6 @@ class Cell:
         self.rect.topleft = topleft
         self.background_color = Color.CELL_BACKGROUND
 
-        # Subscribe to mouse button up events and key up events
-        pubsub.subscribe(pg.MOUSEBUTTONUP, self.on_click)
         pubsub.subscribe(pg.KEYUP, self.on_key_up)
 
     def on_key_up(self, key) -> None:
@@ -51,44 +49,7 @@ class Cell:
             self.value = self.sketched_value
             self.sketched_value = 0
             self.is_editable = False
-
-    def on_click(self, mouse_pos) -> None:
-        """
-        Checks if the mouse click is within the cell's rect.
-        If so, set the cell as selected.
-        Otherwise, deselect it.
-        """
-        if self.rect.collidepoint(mouse_pos):
-            self.selected = True
-        else:
-            self.selected = False
-
-    def set_cell_value(self, value) -> None:
-        """
-        Sets the cell's value
-
-        :param int value: The value to be set
-        :return: None
-        """
-        self.value = value
-
-    def set_sketched_value(self, value) -> None:
-        """
-        Sets the cell's sketched value
-
-        :param int value: The value to be sketched
-        :return: None
-        """
-        self.sketched_value = value
-
-    def set_selected(self, selected) -> None:
-        """
-        Sets the cell's selected status
-
-        :param bool selected: The selected status to be set
-        :return: None
-        """
-        self.selected = selected
+            pubsub.publish('EDIT_CELL_VALUE', self)
 
     def draw(self, other_surface) -> None:
         """
@@ -117,9 +78,5 @@ class Cell:
             render = sketched_font.render(str(self.sketched_value), 1, color)
             render_rect = render.get_rect(topleft=(10, 10))
             self.image.blit(render, render_rect)
-
-        # Draw the cell outline if it is selected
-        if self.selected:
-            pg.draw.rect(self.image, Color.RED, self.image.get_rect(), 2)
 
         other_surface.blit(self.image, self.rect)

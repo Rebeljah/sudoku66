@@ -3,15 +3,11 @@ import sys
 import pygame as pg
 import pygame.display
 
-from sudoku_generator import SudokuGenerator
-from button import Button
-from cell import Cell
+
 from board import Board
 import config
 import pubsub
-from start_menu import draw_game_start
-from game_won_menu import draw_game_won
-from game_over_menu import draw_game_over
+from views import GameLostView, GameWonView, StartMenuView, BoardView
 
 
 class GameState:
@@ -19,7 +15,7 @@ class GameState:
     Class to manage and update game objects and draw to screen.
     """
 
-    def __init__(self, screen: pg.Surface, mode):
+    def __init__(self, screen: pg.Surface):
         """
         Initializes the game state.
 
@@ -28,7 +24,46 @@ class GameState:
         """
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.board = Board(self.screen_rect.width, mode)
+
+        self.start_menu_view = StartMenuView(*self.screen_rect.size, self)
+        self.game_won_view = GameWonView(*self.screen_rect.size, self)
+        self.game_lost_view = GameLostView(*self.screen_rect.size, self)
+        self.board_view = None
+        self.board = None
+
+        self.ui_mode = 'start_game'
+
+        pubsub.subscribe('EDIT_CELL_VALUE', self._check_win)
+    
+    def start_game(self, difficulty: str):
+        if self.ui_mode != 'start_game':
+            return
+        
+        self.board = Board(self.screen_rect.w, difficulty)
+        self.board_view = BoardView(*self.screen_rect.size, self)
+        self.ui_mode = 'playing_game'
+    
+    def restart(self):       
+        self.ui_mode = 'start_game'
+        self.board = None
+    
+    def exit(self):       
+        sys.exit()
+
+    def _check_win(self, cell):
+        if not self.board.is_full():
+            return
+        
+        for row in range(len(self.board.cells)):
+            for col in range(len(self.board.cells[row])):
+                self.board.generator.board[row][col] = self.board.cells[row][col].value
+
+        for row in range(len(self.board.cells)):
+            for col in range(len(self.board.cells[row])):
+                if not self.board.generator.is_valid(row, col, self.board.generator.board[row][col]):
+                    self.ui_mode = 'game_lost'
+        else:
+            self.ui_mode = 'game_won'
 
     @staticmethod
     def check_events():
@@ -51,14 +86,21 @@ class GameState:
         """
         pass
 
+
     def draw(self):
         """
         Draws the UI onto the Pygame screen.
         """
-        # Base background
         self.screen.fill(config.Color.BACKGROUND)
 
-        self.board.draw(self.screen)
+        if self.ui_mode == 'start_game':
+            self.start_menu_view.draw(self.screen)
+        elif self.ui_mode == 'playing_game':
+            self.board_view.draw(self.screen)
+        elif self.ui_mode == 'game_won':
+            self.game_won_view.draw(self.screen)
+        elif self.ui_mode == 'game_lost':
+            self.game_lost_view.draw(self.screen)
 
         pg.display.flip()  # Re-renders the screen
 
@@ -71,9 +113,10 @@ def new_screen() -> pg.Surface:
     - screen (pg.Surface): The Pygame screen surface.
     """
     monitor_height = pg.display.Info().current_h
-    height = width = 0.70 * monitor_height
+    width = 0.70 * monitor_height
+    height = width + 100
 
-    screen = pg.display.set_mode((height, width + 100))
+    screen = pg.display.set_mode((width, height))
     pg.display.set_caption('Sudoku 66')
 
     return screen
@@ -88,15 +131,8 @@ def main():
 
     # Init font package before using it
     pg.font.init()
-    monitor_height = pg.display.Info().current_h
-    height = width = 0.70 * monitor_height
-    start_screen = pygame.display.set_mode((height, width))
-    mode = draw_game_start(start_screen)
 
-    if mode:
-        print('creating new game board')
-        screen = new_screen()
-        game = GameState(screen, mode=mode)
+    game = GameState(new_screen())
 
     fps_clock = pg.time.Clock()
     while True:
