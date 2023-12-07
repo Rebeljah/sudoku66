@@ -34,11 +34,18 @@ class Button:
         self.image.blit(text_render, text_rect)
 
         pubsub.subscribe(pg.MOUSEBUTTONUP, self.on_click)
+        self.is_active = False
+    
+    def activate(self):
+        self.is_active = True
+    
+    def deactivate(self):
+        self.is_active = False
 
     def on_click(self, mouse_pos):
         """Can be called on mouse up or mouse down to react to user clicking on
         screen"""
-        if self.rect.collidepoint(mouse_pos):
+        if self.is_active and self.rect.collidepoint(mouse_pos):
             self.on_click_function()
 
     def draw(self, other_surface: pg.Surface):

@@ -5,8 +5,25 @@ from config import Color
 from button import Button
 
 
-class GameLostView:
+class View:
+    def __init__(self) -> None:
+        self.buttons = []
+        self.is_active = False
+    
+    def activate(self):
+        self.is_active = True
+        for button in self.buttons:
+            button.activate()
+    
+    def deactivate(self):
+        self.is_active = False
+        for button in self.buttons:
+            button.deactivate()
+
+
+class GameLostView(View):
     def __init__(self, width, height, game_state):
+        super().__init__()
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -19,6 +36,7 @@ class GameLostView:
 
         button_height = int(0.09 * self.rect.h)
         restart_btn = Button('restart', button_height, game_state.restart)
+        self.buttons.append(restart_btn)
 
         restart_btn.rect.center = self.rect.w // 2, self.rect.h // 2
 
@@ -28,8 +46,9 @@ class GameLostView:
     def draw(self, other_surface: pygame.Surface):
         other_surface.blit(self.image, self.rect)
 
-class GameWonView:
+class GameWonView(View):
     def __init__(self, width, height, game_state):
+        super().__init__()
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -42,6 +61,7 @@ class GameWonView:
 
         button_height = int(0.09 * self.rect.h)
         exit_btn = Button('exit', button_height, game_state.exit)
+        self.buttons.append(exit_btn)
         exit_btn.rect.center = self.rect.w // 2, self.rect.h // 2
 
         self.image.blit(message_surface, message_rect)
@@ -51,8 +71,9 @@ class GameWonView:
         other_surface.blit(self.image, self.rect)
 
 
-class StartMenuView:
+class StartMenuView(View):
     def __init__(self, width, height, game_state):
+        super().__init__()
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -72,6 +93,7 @@ class StartMenuView:
         easy_button = Button('easy', button_height, lambda: start_game('easy'))
         medium_button = Button('medium', button_height, lambda: start_game('medium'))
         hard_button = Button('hard', button_height, lambda: start_game('hard'))
+        self.buttons.extend([easy_button, medium_button, hard_button])
 
         medium_button.rect.center = self.rect.w // 2, self.rect.h // 2
         easy_button.rect.y = hard_button.rect.y = medium_button.rect.y
@@ -88,8 +110,9 @@ class StartMenuView:
         other_surface.blit(self.image, self.rect)
 
 
-class BoardView:
+class BoardView(View):
     def __init__(self, width, height, game_state) -> None:
+        super().__init__()
         self.game_state = game_state
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
@@ -99,6 +122,7 @@ class BoardView:
         self.exit_btn = Button('exit', button_height, game_state.exit)
         self.restart_btn = Button('restart', button_height, game_state.restart)
         self.reset_btn = Button('reset', button_height, game_state.board.reset)
+        self.buttons.extend([self.exit_btn, self.restart_btn, self.reset_btn])
     
     def draw(self, other_surface):
         self.image.fill(Color.BACKGROUND)

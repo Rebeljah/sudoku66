@@ -1,8 +1,6 @@
 import sys
 
 import pygame as pg
-import pygame.display
-
 
 from board import Board
 import config
@@ -25,31 +23,36 @@ class GameState:
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
-        self.start_menu_view = StartMenuView(*self.screen_rect.size, self)
-        self.game_won_view = GameWonView(*self.screen_rect.size, self)
-        self.game_lost_view = GameLostView(*self.screen_rect.size, self)
-        self.board_view = None
+        self.views = {
+            'start_game': StartMenuView(*self.screen_rect.size, self),
+            'game_won': GameWonView(*self.screen_rect.size, self),
+            'game_lost': GameLostView(*self.screen_rect.size, self),
+            'playing_game': None
+        }
+        self.active_view = None
+        self.set_active_view('start_game')
+
         self.board = None
 
-        self.ui_mode = 'start_game'
 
         pubsub.subscribe('EDIT_CELL_VALUE', self._check_win)
     
-    def start_game(self, difficulty: str):
-        if self.ui_mode != 'start_game':
-            return
-        
+    def set_active_view(self, new_view_name: str):
+        if self.active_view is not None:
+            self.views[self.active_view].deactivate()
+        self.active_view = new_view_name
+        self.views[new_view_name].activate()
+    
+    def start_game(self, difficulty: str):       
         self.board = Board(self.screen_rect.w, difficulty)
-        self.board_view = BoardView(*self.screen_rect.size, self)
-        self.ui_mode = 'playing_game'
+        self.views['playing_game'] = BoardView(*self.screen_rect.size, self)
+        self.set_active_view('playing_game')
     
     def restart(self):       
-        self.ui_mode = 'start_game'
+        self.set_active_view('start_game')
         self.board = None
     
     def exit(self):
-        
-
         sys.exit()
 
     def _check_win(self, cell):
@@ -57,9 +60,9 @@ class GameState:
             return
         
         if self.board.is_solved():
-            self.ui_mode = 'game_won'
+            self.set_active_view('game_won')
         else:
-            self.ui_mode = 'game_lost'
+            self.set_active_view('game_lost')
 
     @staticmethod
     def check_events():
@@ -91,14 +94,7 @@ class GameState:
         """
         self.screen.fill(config.Color.BACKGROUND)
 
-        if self.ui_mode == 'start_game':
-            self.start_menu_view.draw(self.screen)
-        elif self.ui_mode == 'playing_game':
-            self.board_view.draw(self.screen)
-        elif self.ui_mode == 'game_won':
-            self.game_won_view.draw(self.screen)
-        elif self.ui_mode == 'game_lost':
-            self.game_lost_view.draw(self.screen)
+        self.views[self.active_view].draw(self.screen)
 
         pg.display.flip()  # Re-renders the screen
 
