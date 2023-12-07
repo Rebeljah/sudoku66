@@ -19,6 +19,7 @@ class Board:
             removed_cells = 40
         elif difficulty == 'hard':
             removed_cells = 50
+        removed_cells=1
 
         self.generator = SudokuGenerator(config.ROW_LENGTH, removed_cells)
         self.generator.fill_values()

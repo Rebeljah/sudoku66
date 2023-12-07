@@ -6,24 +6,65 @@ from button import Button
 
 
 class View:
-    def __init__(self) -> None:
+    def __init__(self, width, height) -> None:
+        self.image = pygame.Surface((width, height))
+        self.rect = self.image.get_rect()
+
         self.buttons = []
         self.is_active = False
+        self.do_draw = False
+        self._is_fading_out = False
+        self._is_fading_in = False
+        self.alpha_level = 0
     
     def activate(self):
         self.is_active = True
+        self.do_draw = True
         for button in self.buttons:
             button.activate()
     
     def deactivate(self):
         self.is_active = False
+        self.do_draw = False
         for button in self.buttons:
             button.deactivate()
+    
+    def fade_out(self):
+        self._is_fading_out = True
+    
+    def fade_in(self):
+        self._is_fading_in = True
+
+    def _fade_out(self):
+        if self.alpha_level <= 0:
+            self.alpha_level = 0
+            self._is_fading_out = False
+            self.deactivate()
+        else:
+            self.alpha_level -= 20
+            self.image.set_alpha(self.alpha_level)
+    
+    def _fade_in(self):
+        self.do_draw = True
+        if self.alpha_level >= 255:
+            self.alpha_level = 255
+            self._is_fading_in = False
+            self.activate()
+        else:
+            self.alpha_level += 20
+            self.image.set_alpha(self.alpha_level)
+    
+    def update(self):
+        if self._is_fading_out:
+            self._fade_out()
+        elif self._is_fading_in:
+            self._fade_in()
+                
 
 
 class GameLostView(View):
     def __init__(self, width, height, game_state):
-        super().__init__()
+        super().__init__(width, height)
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -48,7 +89,7 @@ class GameLostView(View):
 
 class GameWonView(View):
     def __init__(self, width, height, game_state):
-        super().__init__()
+        super().__init__(width, height)
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -73,7 +114,7 @@ class GameWonView(View):
 
 class StartMenuView(View):
     def __init__(self, width, height, game_state):
-        super().__init__()
+        super().__init__(width, height)
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.image.fill(Color.BACKGROUND)
@@ -112,7 +153,7 @@ class StartMenuView(View):
 
 class BoardView(View):
     def __init__(self, width, height, game_state) -> None:
-        super().__init__()
+        super().__init__(width, height)
         self.game_state = game_state
         self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()

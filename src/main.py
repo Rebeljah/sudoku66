@@ -39,9 +39,9 @@ class GameState:
     
     def set_active_view(self, new_view_name: str):
         if self.active_view is not None:
-            self.views[self.active_view].deactivate()
+            self.views[self.active_view].fade_out()
         self.active_view = new_view_name
-        self.views[new_view_name].activate()
+        self.views[new_view_name].fade_in()
     
     def start_game(self, difficulty: str):       
         self.board = Board(self.screen_rect.w, difficulty)
@@ -50,7 +50,6 @@ class GameState:
     
     def restart(self):       
         self.set_active_view('start_game')
-        self.board = None
     
     def exit(self):
         sys.exit()
@@ -85,7 +84,9 @@ class GameState:
         """
         Updates game objects on each frame.
         """
-        pass
+        for view in self.views.values():
+            if view:
+                view.update()
 
 
     def draw(self):
@@ -94,7 +95,9 @@ class GameState:
         """
         self.screen.fill(config.Color.BACKGROUND)
 
-        self.views[self.active_view].draw(self.screen)
+        for view in self.views.values():
+            if view and view.do_draw:
+                view.draw(self.screen)
 
         pg.display.flip()  # Re-renders the screen
 
